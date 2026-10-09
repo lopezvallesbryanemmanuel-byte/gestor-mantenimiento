@@ -1,0 +1,1200 @@
+{
+  "info": {
+    "_postman_id": "b518fcbf-9324-4be6-bcca-541a9d60086e",
+    "name": "Gestor Mantenimiento",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58567360",
+    "_collection_link": "https://go.postman.co/collection/58567360-b518fcbf-9324-4be6-bcca-541a9d60086e?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Sitios",
+      "item": [
+        {
+          "name": "Crear Sitio",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "   pm.test(\"201 Created\", () => pm.response.to.have.status(201));\r\npm.collectionVariables.set(\"sitioId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombre\": \"Sucursal Prueba\",\r\n  \"direccion\": \"Calle Falsa 123\",\r\n  \"cliente\": \"Cliente de Prueba\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sitios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sitios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Sitios",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));\r\npm.test(\"Es una lista\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sitios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sitios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Sitio",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sitios/{{sitioId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sitios",
+                "{{sitioId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Sitio",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));\r\npm.test(\"Nombre actualizado\", () =>\r\n  pm.expect(pm.response.json().nombre).to.eql(\"Sucursal Prueba Editada\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombre\": \"Sucursal Prueba Editada\",\r\n  \"direccion\": \"Calle Falsa 456\",\r\n  \"cliente\": \"Cliente de Prueba\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sitios/{{sitioId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sitios",
+                "{{sitioId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Equipos",
+      "item": [
+        {
+          "name": "Crear Equipo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json();\r\npm.test(\"201 Created\", () => pm.response.to.have.status(201));\r\npm.test(\"Nace activo\", () => pm.expect(r.activo).to.eql(true));\r\npm.collectionVariables.set(\"equipoId\", r.id);\r\npm.collectionVariables.set(\"numeroSerie\", r.numeroSerie);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sitioId\": {{sitioId}},\r\n  \"tipo\": \"CAMARA\",\r\n  \"marca\": \"Hikvision\",\r\n  \"modelo\": \"DS-2CD2143\",\r\n  \"numeroSerie\": \"PRUEBA-{{$timestamp}}\",\r\n  \"fechaInstalacion\": \"2026-01-10\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Equipos 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));\r\npm.test(\"Es una lista\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sitioId\": {{sitioId}},\r\n  \"tipo\": \"CAMARA\",\r\n  \"marca\": \"Hikvision\",\r\n  \"modelo\": \"DS-2CD2143\",\r\n  \"numeroSerie\": \"PRUEBA-{{$timestamp}}\",\r\n  \"fechaInstalacion\": \"2026-01-10\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Equipos 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));\r\npm.test(\"Es una lista\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sitioId\": {{sitioId}},\r\n  \"tipo\": \"CAMARA\",\r\n  \"marca\": \"Hikvision\",\r\n  \"modelo\": \"DS-2CD2143\",\r\n  \"numeroSerie\": \"PRUEBA-{{$timestamp}}\",\r\n  \"fechaInstalacion\": \"2026-01-10\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos?sitioId={{sitioId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos"
+              ],
+              "query": [
+                {
+                  "key": "sitioId",
+                  "value": "{{sitioId}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Equipos 3",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));\r\npm.test(\"Es una lista\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sitioId\": {{sitioId}},\r\n  \"tipo\": \"CAMARA\",\r\n  \"marca\": \"Hikvision\",\r\n  \"modelo\": \"DS-2CD2143\",\r\n  \"numeroSerie\": \"PRUEBA-{{$timestamp}}\",\r\n  \"fechaInstalacion\": \"2026-01-10\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos?tipo=CAMARA",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos"
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "CAMARA"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Equipo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));\r\npm.test(\"Incluye el sitio\", () => pm.expect(pm.response.json().sitioNombre).to.be.a(\"string\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos/{{equipoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos",
+                "{{equipoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Equipo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));\r\npm.test(\"Modelo actualizado\", () =>\r\n  pm.expect(pm.response.json().modelo).to.eql(\"DS-2CD2387\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sitioId\": {{sitioId}},\r\n  \"tipo\": \"CAMARA\",\r\n  \"marca\": \"Hikvision\",\r\n  \"modelo\": \"DS-2CD2387\",\r\n  \"numeroSerie\": \"{{numeroSerie}}\",\r\n  \"fechaInstalacion\": \"2026-01-10\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos/{{equipoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos",
+                "{{equipoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar Mantenimiento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json();\r\npm.test(\"201 Created\", () => pm.response.to.have.status(201));\r\npm.test(\"Nace PENDIENTE\", () => pm.expect(r.estado).to.eql(\"PENDIENTE\"));\r\npm.collectionVariables.set(\"mantenimientoId\", r.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"fecha\": \"2026-11-15\",\r\n  \"tipo\": \"PREVENTIVO\",\r\n  \"descripcion\": \"Revisión general\",\r\n  \"tecnico\": \"Juan Pérez\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos/{{equipoId}}/mantenimientos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos",
+                "{{equipoId}}",
+                "mantenimientos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Historial del Equipo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));\r\npm.test(\"Tiene al menos uno\", () => pm.expect(pm.response.json().length).to.be.above(0));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos/{{equipoId}}/mantenimientos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos",
+                "{{equipoId}}",
+                "mantenimientos"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Mantenimientos",
+      "item": [
+        {
+          "name": "Buscar Mantenimientos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));\r\npm.test(\"Todos PENDIENTE\", () =>\r\n  pm.response.json().forEach(m => pm.expect(m.estado).to.eql(\"PENDIENTE\")));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/mantenimientos?estado=PENDIENTE&desde=2026-10-01&hasta=2026-12-31",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "mantenimientos"
+              ],
+              "query": [
+                {
+                  "key": "estado",
+                  "value": "PENDIENTE"
+                },
+                {
+                  "key": "desde",
+                  "value": "2026-10-01"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-12-31"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Mantenimiento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"fecha\": \"2026-11-16\",\r\n  \"tipo\": \"PREVENTIVO\",\r\n  \"descripcion\": \"Revisión general y limpieza\",\r\n  \"tecnico\": \"Juan Pérez\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/mantenimientos/{{mantenimientoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "mantenimientos",
+                "{{mantenimientoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Estado:EN_PROCESO",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));\r\npm.test(\"EN_PROCESO\", () => pm.expect(pm.response.json().estado).to.eql(\"EN_PROCESO\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"estado\": \"EN_PROCESO\" }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/mantenimientos/{{mantenimientoId}}/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "mantenimientos",
+                "{{mantenimientoId}}",
+                "estado"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Estado:TERMINADO",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));\r\npm.test(\"TERMINADO\", () => pm.expect(pm.response.json().estado).to.eql(\"TERMINADO\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"estado\": \"TERMINADO\" }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/mantenimientos/{{mantenimientoId}}/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "mantenimientos",
+                "{{mantenimientoId}}",
+                "estado"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Errores",
+      "item": [
+        {
+          "name": "Editar un TERMINADO",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json();\r\npm.test(\"409 Conflict\", () => pm.response.to.have.status(409));\r\npm.test(\"Cuerpo de error\", () => {\r\n  pm.expect(r.status).to.eql(409);\r\n  pm.expect(r.error).to.eql(\"Conflict\");\r\n});\r\npm.test(\"Menciona TERMINADO\", () => pm.expect(r.mensaje).to.include(\"TERMINADO\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"fecha\": \"2026-11-20\",\r\n  \"tipo\": \"PREVENTIVO\",\r\n  \"descripcion\": \"Intento de edición\",\r\n  \"tecnico\": \"Juan Pérez\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/mantenimientos/{{mantenimientoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "mantenimientos",
+                "{{mantenimientoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Retroceso de Estado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json();\r\npm.test(\"409 Conflict\", () => pm.response.to.have.status(409));\r\npm.test(\"Transición rechazada\", () => pm.expect(r.mensaje).to.include(\"TERMINADO -> PENDIENTE\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"estado\": \"PENDIENTE\" }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/mantenimientos/{{mantenimientoId}}/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "mantenimientos",
+                "{{mantenimientoId}}",
+                "estado"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Numero de Serie Duplicado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json();\r\npm.test(\"409 Conflict\", () => pm.response.to.have.status(409));\r\npm.test(\"Habla del número de serie\", () => pm.expect(r.mensaje).to.include(\"número de serie\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sitioId\": {{sitioId}},\r\n  \"tipo\": \"CAMARA\",\r\n  \"marca\": \"Hikvision\",\r\n  \"modelo\": \"DS-2CD2143\",\r\n  \"numeroSerie\": \"{{numeroSerie}}\",\r\n  \"fechaInstalacion\": \"2026-01-10\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Campos Vacios",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json();\r\npm.test(\"400 Bad Request\", () => pm.response.to.have.status(400));\r\npm.test(\"Indica el campo marca\", () => pm.expect(r.campos).to.have.property(\"marca\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sitioId\": {{sitioId}},\r\n  \"tipo\": \"CAMARA\",\r\n  \"marca\": \"\",\r\n  \"modelo\": \"DS-2CD2143\",\r\n  \"numeroSerie\": \"ERR-{{$timestamp}}\",\r\n  \"fechaInstalacion\": \"2026-01-10\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Fecha de Instalacion Futura",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json();\r\npm.test(\"400 Bad Request\", () => pm.response.to.have.status(400));\r\npm.test(\"Indica fechaInstalacion\", () => pm.expect(r.campos).to.have.property(\"fechaInstalacion\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sitioId\": {{sitioId}},\r\n  \"tipo\": \"CAMARA\",\r\n  \"marca\": \"Hikvision\",\r\n  \"modelo\": \"DS-2CD2143\",\r\n  \"numeroSerie\": \"ERR-{{$timestamp}}\",\r\n  \"fechaInstalacion\": \"2030-01-01\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ID inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json();\r\npm.test(\"404 Not Found\", () => pm.response.to.have.status(404));\r\npm.test(\"Mensaje claro\", () => pm.expect(r.mensaje).to.eql(\"Equipo 99999 no encontrado\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos/99999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos",
+                "99999"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Parametro Invalido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"400 Bad Request\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos?tipo=XYZ",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos"
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "XYZ"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Sitio Con Equipos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json();\r\npm.test(\"409 Conflict\", () => pm.response.to.have.status(409));\r\npm.test(\"Menciona los equipos\", () => pm.expect(r.mensaje).to.include(\"equipos\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sitios/{{sitioId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sitios",
+                "{{sitioId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Saltar un Paso Preparacion",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201 Created\", () => pm.response.to.have.status(201));\r\npm.collectionVariables.set(\"mantenimientoPendienteId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"fecha\": \"2026-12-01\",\r\n  \"tipo\": \"CORRECTIVO\",\r\n  \"descripcion\": \"Mantenimiento para probar la regla de estados\",\r\n  \"tecnico\": \"Ana López\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos/{{equipoId}}/mantenimientos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos",
+                "{{equipoId}}",
+                "mantenimientos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Saltar un paso Error",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json();\r\npm.test(\"409 Conflict\", () => pm.response.to.have.status(409));\r\npm.test(\"Salto no permitido\", () => pm.expect(r.mensaje).to.include(\"PENDIENTE -> TERMINADO\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"estado\": \"TERMINADO\" }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/mantenimientos/{{mantenimientoPendienteId}}/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "mantenimientos",
+                "{{mantenimientoPendienteId}}",
+                "estado"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cierre",
+      "item": [
+        {
+          "name": "Desactivar Equipo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"204 No Content\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos/{{equipoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos",
+                "{{equipoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar Equipo Inactivo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Inactivo\", () => pm.expect(pm.response.json().activo).to.eql(false));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos/{{equipoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos",
+                "{{equipoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mantenimiento a Equipo Inactivo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json();\r\npm.test(\"409 Conflict\", () => pm.response.to.have.status(409));\r\npm.test(\"Equipo inactivo\", () => pm.expect(r.mensaje).to.include(\"inactivo\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"fecha\": \"2026-12-15\",\r\n  \"tipo\": \"PREVENTIVO\",\r\n  \"descripcion\": \"Intento sobre un equipo inactivo\",\r\n  \"tecnico\": \"Juan Pérez\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos/{{equipoId}}/mantenimientos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos",
+                "{{equipoId}}",
+                "mantenimientos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Sitio Vacio 1/2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "   pm.test(\"201 Created\", () => pm.response.to.have.status(201));\r\npm.collectionVariables.set(\"sitioId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombre\": \"Sucursal Prueba otro\",\r\n  \"direccion\": \"Calle Falsa 124\",\r\n  \"cliente\": \"Cliente de Pruebas\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sitios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sitios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Sitio Vacio",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"204 No Content\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sitios/{{sitioId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sitios",
+                "{{sitioId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "sitioId",
+      "value": ""
+    },
+    {
+      "key": "equipoId",
+      "value": ""
+    },
+    {
+      "key": "mantenimientoId",
+      "value": ""
+    },
+    {
+      "key": "numeroSerie",
+      "value": ""
+    },
+    {
+      "key": "mantenimientoPendienteId",
+      "value": ""
+    }
+  ]
+}

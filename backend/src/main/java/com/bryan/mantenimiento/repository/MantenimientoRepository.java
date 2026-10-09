@@ -17,6 +17,8 @@ public interface MantenimientoRepository extends JpaRepository<Mantenimiento, Lo
 
     List<Mantenimiento> findByFechaBetween(LocalDate desde, LocalDate hasta);
 
+    List<Mantenimiento> findByEstadoAndFechaBetween(EstadoMantenimiento estado, LocalDate desde, LocalDate hasta);
+
     // Consulta JPQL personalizada (usa nombres de clases y atributos, no de tablas)
     @Query("""
             SELECT m.equipo.sitio.nombre, COUNT(m)

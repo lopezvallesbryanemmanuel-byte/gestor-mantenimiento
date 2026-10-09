@@ -14,6 +14,8 @@ import com.bryan.mantenimiento.repository.MantenimientoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -29,8 +31,8 @@ public class MantenimientoService {
     }
 
     @Transactional
-    public MantenimientoResponse crear(MantenimientoRequest req) {
-        Equipo equipo = buscarEquipoActivo(req.equipoId()); // R2
+    public MantenimientoResponse crear(Long equipoId, MantenimientoRequest req) {
+        Equipo equipo = buscarEquipoActivo(equipoId); // R2
 
         Mantenimiento m = new Mantenimiento();
         m.setEquipo(equipo);
@@ -42,20 +44,35 @@ public class MantenimientoService {
         return EntityMapper.toResponse(mantenimientoRepo.save(m));
     }
 
+    // Historial de un equipo, del más reciente al más antiguo
     @Transactional(readOnly = true)
-    public List<MantenimientoResponse> listar(Long equipoId, EstadoMantenimiento estado) {
-        List<Mantenimiento> lista;
-        if (equipoId != null) {
-            lista = mantenimientoRepo.findByEquipoIdOrderByFechaDesc(equipoId);
-            if (estado != null) {
-                lista = lista.stream().filter(m -> m.getEstado() == estado).toList();
-            }
-        } else if (estado != null) {
-            lista = mantenimientoRepo.findByEstado(estado);
-        } else {
-            lista = mantenimientoRepo.findAll();
+    public List<MantenimientoResponse> listarPorEquipo(Long equipoId) {
+        if (!equipoRepo.existsById(equipoId)) { // R6
+            throw new RecursoNoEncontradoException("Equipo " + equipoId + " no encontrado");
         }
-        return lista.stream().map(m -> EntityMapper.toResponse(m)).toList();
+        return mantenimientoRepo.findByEquipoIdOrderByFechaDesc(equipoId).stream()
+                .map(m -> EntityMapper.toResponse(m))
+                .toList();
+    }
+
+    // Búsqueda por estado y rango de fechas; todos los filtros son opcionales
+    @Transactional(readOnly = true)
+    public List<MantenimientoResponse> filtrar(EstadoMantenimiento estado,
+                                               LocalDate desde, LocalDate hasta) {
+        List<Mantenimiento> lista;
+        if (desde == null && hasta == null) {
+            lista = (estado != null) ? mantenimientoRepo.findByEstado(estado)
+                                     : mantenimientoRepo.findAll();
+        } else {
+            LocalDate d = (desde != null) ? desde : LocalDate.of(1900, 1, 1);
+            LocalDate h = (hasta != null) ? hasta : LocalDate.of(9999, 12, 31);
+            lista = (estado != null) ? mantenimientoRepo.findByEstadoAndFechaBetween(estado, d, h)
+                                     : mantenimientoRepo.findByFechaBetween(d, h);
+        }
+        return lista.stream()
+                .sorted(Comparator.comparing(Mantenimiento::getFecha).reversed())
+                .map(m -> EntityMapper.toResponse(m))
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -71,9 +88,6 @@ public class MantenimientoService {
         if (m.getEstado() == EstadoMantenimiento.TERMINADO) {
             throw new ReglaNegocioException(
                     "El mantenimiento " + id + " ya está TERMINADO y no se puede editar");
-        }
-        if (!m.getEquipo().getId().equals(req.equipoId())) {
-            m.setEquipo(buscarEquipoActivo(req.equipoId())); // R2 sobre el equipo nuevo
         }
         m.setFecha(req.fecha());
         m.setTipo(req.tipo());
