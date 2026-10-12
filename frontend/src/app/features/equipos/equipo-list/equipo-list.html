@@ -1,1 +1,76 @@
-<p>equipo-list works!</p>
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h4 mb-0">Equipos</h1>
+    @if (auth.tieneRol('ADMIN')) {
+      <a class="btn btn-primary" routerLink="/equipos/nuevo">Nuevo equipo</a>
+    }
+  </div>
+
+  <div class="row g-2 mb-3">
+    <div class="col-md-4">
+      <select class="form-select" aria-label="Filtrar por sitio"
+              [ngModel]="sitioId" (ngModelChange)="cambiarSitio($event)">
+        <option [ngValue]="null">Todos los sitios</option>
+        @for (s of sitios(); track s.id) {
+          <option [ngValue]="s.id">{{ s.nombre }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-md-4">
+      <select class="form-select" aria-label="Filtrar por tipo"
+              [ngModel]="tipo" (ngModelChange)="cambiarTipo($event)">
+        <option [ngValue]="null">Todos los tipos</option>
+        @for (t of tipos; track t) {
+          <option [ngValue]="t">{{ t }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (cargando()) {
+    <div class="text-center py-5">
+      <div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div>
+    </div>
+  } @else if (equipos().length === 0) {
+    <div class="alert alert-secondary">No hay equipos que coincidan con los filtros.</div>
+  } @else {
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>Sitio</th>
+          <th>Tipo</th>
+          <th>Marca y modelo</th>
+          <th>N° de serie</th>
+          <th>Instalación</th>
+          <th>Estado</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (e of equipos(); track e.id) {
+          <tr>
+            <td>{{ e.sitioNombre }}</td>
+            <td>{{ e.tipo }}</td>
+            <td>{{ e.marca }} {{ e.modelo }}</td>
+            <td>{{ e.numeroSerie }}</td>
+            <td>{{ e.fechaInstalacion }}</td>
+            <td>
+              <span class="badge" [class]="e.activo ? 'text-bg-success' : 'text-bg-secondary'">
+                {{ e.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/equipos', e.id]">Ver</a>
+              @if (auth.tieneRol('ADMIN')) {
+                <a class="btn btn-sm btn-outline-primary me-1" [routerLink]="['/equipos', e.id, 'editar']">Editar</a>
+                @if (e.activo) {
+                  <button type="button" class="btn btn-sm btn-outline-danger" (click)="desactivar(e)">Desactivar</button>
+                }
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

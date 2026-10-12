@@ -1,1 +1,20 @@
-<p>navbar works!</p>
+<nav class="navbar navbar-expand navbar-dark bg-dark px-3">
+  <a class="navbar-brand" routerLink="/equipos">Gestor de Mantenimiento</a>
+
+  <ul class="navbar-nav me-auto">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/sitios" routerLinkActive="active">Sitios</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/equipos" routerLinkActive="active">Equipos</a>
+    </li>
+  </ul>
+
+  <span class="navbar-text me-3">
+    {{ auth.nombre ?? auth.usuario()?.username }}
+    <span class="badge text-bg-secondary ms-1">{{ auth.usuario()?.rol }}</span>
+  </span>
+  <button type="button" class="btn btn-outline-light btn-sm" (click)="auth.logout()">
+    Cerrar sesión
+  </button>
+</nav>

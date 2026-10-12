@@ -1,1 +1,41 @@
-<p>mantenimiento-form works!</p>
+<div class="card mb-3">
+  <div class="card-body">
+    <h3 class="h6 mb-3">Registrar mantenimiento</h3>
+    <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+      <div class="row">
+        <div class="col-md-3 mb-3">
+          <label for="fecha" class="form-label">Fecha</label>
+          <input id="fecha" type="date" class="form-control" formControlName="fecha"
+                 [class.is-invalid]="form.controls.fecha.touched && form.controls.fecha.invalid">
+          <div class="invalid-feedback">La fecha es obligatoria</div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <label for="tipo" class="form-label">Tipo</label>
+          <select id="tipo" class="form-select" formControlName="tipo">
+            @for (t of tipos; track t) {
+              <option [value]="t">{{ t }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="tecnico" class="form-label">Técnico</label>
+          <input id="tecnico" class="form-control" formControlName="tecnico"
+                 [class.is-invalid]="form.controls.tecnico.touched && form.controls.tecnico.invalid">
+          <div class="invalid-feedback">El técnico es obligatorio (máximo 100 caracteres)</div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="descripcion" class="form-label">Descripción</label>
+        <textarea id="descripcion" rows="2" class="form-control" formControlName="descripcion"
+                  [class.is-invalid]="form.controls.descripcion.touched && form.controls.descripcion.invalid"></textarea>
+        <div class="invalid-feedback">La descripción es obligatoria (máximo 500 caracteres)</div>
+      </div>
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary btn-sm" [disabled]="guardando()">
+          {{ guardando() ? 'Guardando...' : 'Registrar' }}
+        </button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancelado.emit()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

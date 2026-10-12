@@ -19,18 +19,24 @@ export class AuthService {
       .post<LoginResponse>(`${environment.apiUrl}/auth/login`, { username, password })
       .pipe(tap(r => {
         localStorage.setItem(this.KEY, r.token);
+        localStorage.setItem('nombre', r.nombre);
         this.usuario.set(this.leerSesion());
       }));
   }
 
   logout() {
     localStorage.removeItem(this.KEY);
+    localStorage.removeItem('nombre');
     this.usuario.set(null);
     this.router.navigate(['/login']);
   }
 
   get token(): string | null {
     return localStorage.getItem(this.KEY);
+  }
+
+  get nombre(): string | null {
+    return localStorage.getItem('nombre');
   }
 
   estaAutenticado(): boolean {

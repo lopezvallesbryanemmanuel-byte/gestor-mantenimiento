@@ -1,1 +1,87 @@
-<p>equipo-form works!</p>
+<div class="container py-4" style="max-width: 640px;">
+  <h1 class="h4 mb-4">{{ esEdicion ? 'Editar equipo' : 'Nuevo equipo' }}</h1>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div class="mb-3">
+      <label for="sitioId" class="form-label">Sitio</label>
+      <select id="sitioId" class="form-select" formControlName="sitioId"
+              [class.is-invalid]="form.controls.sitioId.touched && form.controls.sitioId.invalid">
+        <option [ngValue]="0">Selecciona un sitio</option>
+        @for (s of sitios(); track s.id) {
+          <option [ngValue]="s.id">{{ s.nombre }}</option>
+        }
+      </select>
+      @if (form.controls.sitioId.touched && form.controls.sitioId.invalid) {
+        <div class="invalid-feedback">Selecciona un sitio</div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="tipo" class="form-label">Tipo</label>
+      <select id="tipo" class="form-select" formControlName="tipo">
+        @for (t of tipos; track t) {
+          <option [value]="t">{{ t }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="marca" class="form-label">Marca</label>
+        <input id="marca" class="form-control" formControlName="marca"
+               [class.is-invalid]="form.controls.marca.touched && form.controls.marca.invalid">
+        @if (form.controls.marca.touched && form.controls.marca.hasError('required')) {
+          <div class="invalid-feedback">La marca es obligatoria</div>
+        }
+        @if (form.controls.marca.hasError('maxlength')) {
+          <div class="invalid-feedback">Máximo 50 caracteres</div>
+        }
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="modelo" class="form-label">Modelo</label>
+        <input id="modelo" class="form-control" formControlName="modelo"
+               [class.is-invalid]="form.controls.modelo.touched && form.controls.modelo.invalid">
+        @if (form.controls.modelo.touched && form.controls.modelo.hasError('required')) {
+          <div class="invalid-feedback">El modelo es obligatorio</div>
+        }
+        @if (form.controls.modelo.hasError('maxlength')) {
+          <div class="invalid-feedback">Máximo 50 caracteres</div>
+        }
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="numeroSerie" class="form-label">Número de serie</label>
+      <input id="numeroSerie" class="form-control" formControlName="numeroSerie"
+             [class.is-invalid]="form.controls.numeroSerie.touched && form.controls.numeroSerie.invalid">
+      @if (form.controls.numeroSerie.touched && form.controls.numeroSerie.hasError('required')) {
+        <div class="invalid-feedback">El número de serie es obligatorio</div>
+      }
+      @if (form.controls.numeroSerie.hasError('maxlength')) {
+        <div class="invalid-feedback">Máximo 50 caracteres</div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="fechaInstalacion" class="form-label">Fecha de instalación</label>
+      <input id="fechaInstalacion" type="date" class="form-control"
+             formControlName="fechaInstalacion" [max]="hoy"
+             [class.is-invalid]="form.controls.fechaInstalacion.touched && form.controls.fechaInstalacion.invalid">
+      @if (form.controls.fechaInstalacion.touched && form.controls.fechaInstalacion.invalid) {
+        <div class="invalid-feedback">La fecha de instalación es obligatoria</div>
+      }
+    </div>
+
+    @if (errorServidor()) {
+      <div class="alert alert-danger" role="alert">{{ errorServidor() }}</div>
+    }
+
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-primary" [disabled]="guardando()">
+        {{ guardando() ? 'Guardando...' : 'Guardar' }}
+      </button>
+      <a class="btn btn-outline-secondary" routerLink="/equipos">Cancelar</a>
+    </div>
+  </form>
+</div>

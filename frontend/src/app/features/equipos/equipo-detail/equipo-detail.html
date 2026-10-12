@@ -1,1 +1,48 @@
-<p>equipo-detail works!</p>
+<div class="container py-4">
+  @if (cargando()) {
+    <div class="text-center py-5">
+      <div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div>
+    </div>
+  } @else if (equipo(); as e) {
+    <div class="d-flex justify-content-between align-items-start mb-3">
+      <h1 class="h4 mb-0">
+        {{ e.marca }} {{ e.modelo }}
+        @if (!e.activo) { <span class="badge text-bg-secondary ms-2">Inactivo</span> }
+      </h1>
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" routerLink="/equipos">Volver</a>
+        @if (auth.tieneRol('ADMIN')) {
+          <a class="btn btn-outline-primary" [routerLink]="['/equipos', e.id, 'editar']">Editar</a>
+        }
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <dl class="row mb-0">
+          <dt class="col-sm-3">Sitio</dt><dd class="col-sm-9">{{ e.sitioNombre }}</dd>
+          <dt class="col-sm-3">Tipo</dt><dd class="col-sm-9">{{ e.tipo }}</dd>
+          <dt class="col-sm-3">N° de serie</dt><dd class="col-sm-9">{{ e.numeroSerie }}</dd>
+          <dt class="col-sm-3">Instalación</dt><dd class="col-sm-9 mb-0">{{ e.fechaInstalacion }}</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h2 class="h5 mb-0">Historial de mantenimientos</h2>
+      @if (e.activo && !mostrandoForm()) {
+        <button type="button" class="btn btn-primary btn-sm" (click)="mostrandoForm.set(true)">
+          Registrar mantenimiento
+        </button>
+      }
+    </div>
+
+    @if (mostrandoForm()) {
+      <app-mantenimiento-form [equipoId]="e.id"
+                              (registrado)="alRegistrar()"
+                              (cancelado)="mostrandoForm.set(false)" />
+    }
+
+    <app-mantenimiento-list [items]="historial()" (cambiado)="cargarHistorial()" />
+  }
+</div>

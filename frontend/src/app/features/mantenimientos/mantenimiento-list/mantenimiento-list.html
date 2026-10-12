@@ -1,1 +1,35 @@
-<p>mantenimiento-list works!</p>
+@if (items().length === 0) {
+  <div class="alert alert-secondary">Este equipo todavía no tiene mantenimientos.</div>
+} @else {
+  <table class="table align-middle">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Tipo</th>
+        <th>Descripción</th>
+        <th>Técnico</th>
+        <th>Estado</th>
+        <th class="text-end">Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (m of items(); track m.id) {
+        <tr>
+          <td>{{ m.fecha }}</td>
+          <td>{{ m.tipo }}</td>
+          <td>{{ m.descripcion }}</td>
+          <td>{{ m.tecnico }}</td>
+          <td><app-estado-badge [estado]="m.estado" /></td>
+          <td class="text-end">
+            @if (siguiente(m); as sig) {
+              <button type="button" class="btn btn-sm btn-outline-primary"
+                      [disabled]="procesando() === m.id" (click)="avanzar(m)">
+                {{ sig === 'TERMINADO' ? 'Terminar' : 'Iniciar' }}
+              </button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
