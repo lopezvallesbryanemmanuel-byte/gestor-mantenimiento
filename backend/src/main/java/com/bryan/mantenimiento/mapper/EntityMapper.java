@@ -6,6 +6,8 @@ import com.bryan.mantenimiento.dto.SitioResponse;
 import com.bryan.mantenimiento.entity.Equipo;
 import com.bryan.mantenimiento.entity.Mantenimiento;
 import com.bryan.mantenimiento.entity.Sitio;
+import com.bryan.mantenimiento.dto.UsuarioResponse;
+import com.bryan.mantenimiento.entity.Usuario;
 
 public final class EntityMapper {
 
@@ -44,5 +46,12 @@ public final class EntityMapper {
                 m.getDescripcion(),
                 m.getTecnico(),
                 m.getEstado());
+    }
+    public static UsuarioResponse toResponse(Usuario u) {
+        return new UsuarioResponse(
+                u.getId(),
+                u.getUsername(),
+                u.getNombre(),
+                u.getRol());
     }
 }

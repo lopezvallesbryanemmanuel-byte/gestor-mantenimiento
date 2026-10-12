@@ -32,4 +32,10 @@ public class Usuario {
 
     @Column(nullable = false)
     private Boolean activo = true;
+    public Usuario(String username, String password, String nombre, Rol rol) {
+        this.username = username;
+        this.password = password;
+        this.nombre = nombre;
+        this.rol = rol;
+    }
 }

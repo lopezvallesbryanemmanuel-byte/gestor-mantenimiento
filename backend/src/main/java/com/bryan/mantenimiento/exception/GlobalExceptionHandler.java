@@ -12,6 +12,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.security.core.AuthenticationException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -57,7 +58,11 @@ public class GlobalExceptionHandler {
                 "La operación viola una restricción de la base de datos", null);
     }
 
-    // Fase 3: aquí se agregará el manejador de AuthenticationException (401)
+    // Login con usuario o contraseña incorrectos (o usuario deshabilitado)
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> credenciales(AuthenticationException ex) {
+        return build(HttpStatus.UNAUTHORIZED, "Usuario o contraseña incorrectos", null);
+    }
 
     private ResponseEntity<ErrorResponse> build(HttpStatus s, String msg,
                                                 Map<String, String> campos) {
