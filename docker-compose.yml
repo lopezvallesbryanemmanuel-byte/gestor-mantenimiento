@@ -37,5 +37,29 @@ services:
     entrypoint: ["/bin/bash", "/scripts/init.sh"]
     restart: "no"
 
+  backend:
+    build: ./backend
+    container_name: mant-backend
+    depends_on:
+      db-init:
+        condition: service_completed_successfully # arranca cuando la BD ya tiene tablas
+    environment:
+      DB_HOST: db # nombre del servicio de SQL Server
+      DB_USER: app_mant
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-3600000}
+      CORS_ORIGIN: http://localhost:4200
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./frontend
+    container_name: mant-frontend
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+
 volumes:
   mssql-data:
